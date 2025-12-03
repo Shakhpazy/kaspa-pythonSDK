@@ -1,6 +1,6 @@
 from client.rest_client import RestClient
 
 kaspa = RestClient()
-address = "kaspa:qpz2vgvlxhmyhmt22h538pjzmvvd52nuut80y5zulgpvyerlskvvwm7n4uk5a"
+address = "kaspa:qr2adzl6vl69thdss2parxcyctlmwa979xfswxafzl9lh9y8pnja6pcceswpr"
 balance = kaspa.get_balance(address)
-print(f"Balance for address {address}: {balance}")
+print(balance)

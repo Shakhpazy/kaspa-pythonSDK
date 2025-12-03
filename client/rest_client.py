@@ -1,5 +1,5 @@
 import requests
-
+from utils.converstions import Conversions
 class RestClient:
 
     def __init__(self):
@@ -17,8 +17,9 @@ class RestClient:
 
         if response.status_code == 404:
             raise Exception(f"Error fetching balance: {response.status_code} - {"The address is invalid"}")
-        result = response.json()
-        return result['balance'] / 100000000  # Convert from sompi to KASPA
+        response = response.json()
+        balance = Conversions.sompi_to_kaspa(response['balance'])
+        return balance 
 
 
     def get_utxos(self, address):
@@ -35,12 +36,6 @@ class RestClient:
     
     def get_transaction_count(self):
         pass
-
-
-kaspa = RestClient()
-address = "kaspa:qr2adzl6vl69thdss2parxcyctlmwa979xfswxafzl9lh9y8pnja6pcceswpr"
-balance = kaspa.get_balance(address)
-print(balance)
 
 
     

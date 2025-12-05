@@ -6,10 +6,8 @@ class RestClient:
 
     def __init__(self):
         self.base_url = "https://api.kaspa.org/"
-        pass
     
 
-    
     # -------------------------------
     # Public REST API method calls
     # -------------------------------
@@ -36,7 +34,7 @@ class RestClient:
 
         data = response.json()
         
-        return Conversions.sompi_to_kaspa(data["balance"])
+        return data["balance"]
 
 
     def get_utxos(self, address: str):
@@ -168,12 +166,11 @@ class RestClient:
             ValueError: If limit is outside the range [1, 9999].
             KaspaAPIError: If the REST API call fails.
         """
-
-        url = f"{self.base_url}/addresses/top"
-        response = requests.get(url)
-
         if limit and not 1 <= limit <= 9999:
             raise ValueError("limit must be in the inclusive range [1, 9999]")
+        
+        url = f"{self.base_url}/addresses/top"
+        response = requests.get(url)
 
         if not response.ok:
             raise KaspaAPIError(
@@ -189,11 +186,71 @@ class RestClient:
         return ranking[:limit]
 
 
-    def get_transactions(self):
-        pass
+    def get_full_transactions_raw(self, address, limit: int = 500, offset: int = 0, resolve: str = "no"):
+        if limit < 1 or limit > 500 or offset < 0:
+            raise ValueError("limit must be in [1, 500] and offset must be >= 0")
+        
+        if resolve not in {"no", "light", "full"}:
+            raise ValueError("resolve must be one of: 'no', 'light', 'full'")
+
+        url = f"{self.base_url}/addresses/{address}/full-transactions"
+        params = {
+            "limit": limit,
+            "offset": offset,
+            "resolve_previous_outpoints": resolve
+        }
+
+        response = requests.get(url, params=params)
+        if not response.ok:
+            raise KaspaAPIError(
+                f"Error fetching transactions ({response.status_code}): {response.text}"
+            )
+        
+        return response.json()
+
+    def get_transactions(self, address, limit: int = 100):
+        transactions = self.get_full_transactions_raw(address, limit=limit, offset=0, resolve="light")
+        simplified_transactions = []
+        for tx in transactions:
+            # Extract inputs
+            input_utxo = []
+            for utxo_in in tx["inputs"]:
+                input_utxo.append({
+                    "address": utxo_in.get("previous_outpoint_address"),
+                    "amount": utxo_in.get("previous_outpoint_amount")
+                })
+
+            # Extract outputs
+            output_utxo = []
+            for utxo_out in tx["outputs"]:
+                output_utxo.append({
+                    "address": utxo_out.get("script_public_key_address"),
+                    "amount": utxo_out.get("amount")
+                })
+
+            simplified_tx = {
+                "transaction_id": tx.get("transaction_id"),
+                "timestamp": tx.get("block_time"),
+                "is_accepted": tx.get("is_accepted"),
+                "inputs": input_utxo,
+                "outputs": output_utxo
+            }
+            simplified_transactions.append(simplified_tx)
+        
+        return simplified_transactions
+
     
-    def get_transaction_count(self):
-        pass
+    def get_transaction_count(self, address) -> int:
+        url = f"{self.base_url}/addresses/{address}/transactions-count"
+        response = requests.get(url)
+        
+        if not response.ok:
+            raise KaspaAPIError(
+                f"Error fetching transaction count ({response.status_code}): {response.text}"
+            )
+        
+        data = response.json()
+        return data.get("total")
 
 
     

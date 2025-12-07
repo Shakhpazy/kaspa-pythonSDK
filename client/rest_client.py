@@ -2,6 +2,9 @@ import requests
 from utils.converstions import Conversions
 from utils.apierror import KaspaAPIError
 
+VALID_RESOLVES = {"light", "full"}
+VALID_ACCEPTANCE = {"accepted", "rejected"}
+
 class RestClient:
 
     def __init__(self):
@@ -74,7 +77,7 @@ class RestClient:
     def get_full_transactions_raw(self, address, limit: int = 500, offset: int = 0, resolve = None):
         if limit < 1 or limit > 500 or offset < 0:
             raise ValueError("limit must be in [1, 500] and offset must be >= 0")
-        if resolve and resolve not in {"light", "full"}:
+        if resolve and resolve not in VALID_RESOLVES:
             raise ValueError("resolve must be one of: 'light', 'full', or None")
 
         params = {
@@ -82,7 +85,7 @@ class RestClient:
             "offset": offset,
         }
 
-        if resolve and resolve in {"light", "full"}:
+        if resolve in VALID_RESOLVES:
             params["resolve_previous_outpoints"] = resolve
 
         url = f"{self.base_url}/addresses/{address}/full-transactions"
@@ -95,20 +98,28 @@ class RestClient:
         
         return response.json()
 
-    def get_full_transactionpage_raw(self, address, limit: int = 500, before: int = 0, after : int = 0, resolve: str = "no", acceptance: str = ""):
+    def get_full_transactionpage_raw(self, address, limit: int = 500, before: int = 0, after : int = 0, resolve = None, acceptance = None):
+
         if limit < 1 or limit > 500 or before < 0 or after < 0:
             raise ValueError("limit must be in [1, 500] and before/after must be >= 0")
         
-        if resolve not in {"no", "light", "full"}:
-            raise ValueError("resolve must be one of: 'no', 'light', 'full'")
+        if resolve and resolve not in VALID_RESOLVES:
+            raise ValueError("resolve must be one of: 'light', 'full', 'None'")
+        
+        if acceptance and acceptance not in VALID_ACCEPTANCE:
+            raise ValueError("acceptance must be one of: 'accepted', 'rejected', 'None'")
 
-        url = f"{self.base_url}/addresses/{address}/full-transactionpage"
+        url = f"{self.base_url}/addresses/{address}/full-transactions-page"
         params = {
             "limit": limit,
             "before": before,
             "after": after,
-            "resolve_previous_outpoints": resolve
         }
+
+        if resolve in VALID_RESOLVES:
+            params["resolve_previous_outpoints"] = resolve
+        if acceptance in VALID_ACCEPTANCE:
+            params["acceptance"] = acceptance
 
         response = requests.get(url, params=params)
         if not response.ok:

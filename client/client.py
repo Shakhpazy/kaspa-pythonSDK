@@ -14,11 +14,6 @@ class KaspaClient():
 
 
 
-
-
-
-
-
 # This method should be in my other class that uses RestClient, not here directly
     # def get_transactions(self, address, limit: int = 100):
     #     transactions = self.get_full_transactions_raw(address, limit=limit, offset=0, resolve="light")

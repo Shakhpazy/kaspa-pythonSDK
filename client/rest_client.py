@@ -14,14 +14,6 @@ class RestClient:
     # -------------------------------
     # Public REST API method calls for addresses
     # -------------------------------
-
-<<<<<<< HEAD
-=======
-
-    # -------------------------------
-    # Kaspa addresses API
-    # -------------------------------
->>>>>>> a280ff5081f58b7fbe8f32966602aa14875934bb
     def get_balance(self, address: str):
         url = f"{self.base_url}/addresses/{address}/balance"
         response = requests.get(url)
@@ -417,7 +409,3 @@ class RestClient:
         
         return response.json()
     
-
-
-
-

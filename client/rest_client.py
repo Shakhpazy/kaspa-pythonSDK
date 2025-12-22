@@ -15,6 +15,13 @@ class RestClient:
     # Public REST API method calls for addresses
     # -------------------------------
 
+<<<<<<< HEAD
+=======
+
+    # -------------------------------
+    # Kaspa addresses API
+    # -------------------------------
+>>>>>>> a280ff5081f58b7fbe8f32966602aa14875934bb
     def get_balance(self, address: str):
         url = f"{self.base_url}/addresses/{address}/balance"
         response = requests.get(url)
@@ -131,6 +138,158 @@ class RestClient:
         
         data = response.json()
         return data
+    
+    # -------------------------------
+    # Kaspa network api
+    # -------------------------------
+    def __error(response):
+        raise KaspaAPIError(
+                f"Error fetching the kaspa REST API ({response.status_code}) : {response.text}" 
+            )
+
+    def get_blue_score_info(self):
+        url = f"{self.base_url}/info/virtual-chain-blue-score"
+        response = requests.get(url)
+
+        if not response.ok:
+            self.__error(response)
+            
+        data = response.json()
+        return data
+    
+    def get_blockdag_info(self):
+        url = f"{self.base_url}/info/blockdag"
+        response = requests.get(url)
+
+        if not response.ok:
+            self.__error(response)
+        
+        data = response.json()
+        return data
+
+    def get_coinsupply_info(self):
+        url = f"{self.base_url}/info/coinsupply"
+        response = requests.get(url)
+
+        if not response.ok:
+            self.__error(response)
+
+        data = response.json()
+        return data
+    
+    def get_coinsupply_circulating_info(self):
+        url = f"{self.base_url}/info/coinsupply/circulating"
+        response = requests.get(url)
+
+        if not response.ok:
+            self.__error(response)
+
+        data = response.json()
+        return data
+    
+    def get_coinsupply_total_info(self):
+        url = f"{self.base_url}/info/coinsupply/total"
+        response = requests.get(url)
+
+        if not response.ok:
+            self.__error(response)
+
+        data = response.json()
+        return data
+    
+    def get_kaspad_info(self):
+        url = f"{self.base_url}/info/kaspad"
+        response = requests.get(url)
+
+        if not response.ok:
+            self.__error(response)
+
+        data = response.json()
+        return data
+    
+    def get_kaspa_fee_estimate(self):
+        url = f"{self.base_url}/info/fee-estimate"
+        response = requests.get(url)
+
+        if not response.ok:
+            self.__error(response)
+
+        data = response.json()
+        return data
+
+    def get_kaspa_price(self):
+        url = f"{self.base_url}/info/price"
+        response = requests.get(url)
+
+        if not response.ok:
+            self.__error(response)
+
+        data = response.json()
+        return data
+    
+    def get_blockreward_info(self):
+        url = f"{self.base_url}/info/blockreward"
+        response = requests.get(url)
+
+        if not response.ok:
+            self.__error(response)
+
+        data = response.json()
+        return data
+
+    def get_halving_info(self):
+        url = f"{self.base_url}/info/halving"
+        response = requests.get(url)
+
+        if not response.ok:
+            self.__error(response)
+
+        data = response.json()
+        return data
+    
+    def get_hashrate_info(self):
+        url = f"{self.base_url}/info/hashrate"
+        response = requests.get(url)
+
+        if not response.ok:
+            self.__error(response)
+
+        data = response.json()
+        return data
+    
+    def get_max_hashrate_info(self):
+        url = f"{self.base_url}/info/hashrate/max"
+        response = requests.get(url)
+
+        if not response.ok:
+            self.__error(response)
+
+        data = response.json()
+        return data
+
+    def get_kaspa_health(self):
+        url = f"{self.base_url}/info/health"
+        response = requests.get(url)
+
+        if not response.ok:
+            self.__error(response)
+
+        data = response.json()
+        return data
+
+    def get_kaspa_marketcap(self):
+        url = f"{self.base_url}/info/marketcap"
+        response = requests.get(url)
+
+        if not response.ok:
+            self.__error(response)
+
+        data = response.json()
+        return data
+
+
+    def get_hashrate_history(self):
+        pass
 
     # -------------------------------
     # Public REST API method calls for Kaspa network information

@@ -8,13 +8,12 @@ VALID_ACCEPTANCE = {"accepted", "rejected"}
 class RestClient:
 
     def __init__(self):
-        self.base_url = "https://api.kaspa.org/"
+        self.base_url = "https://api.kaspa.org"
     
 
     # -------------------------------
-    # Public REST API method calls
+    # Public REST API method calls for addresses
     # -------------------------------
-
 
     def get_balance(self, address: str):
         url = f"{self.base_url}/addresses/{address}/balance"
@@ -53,10 +52,7 @@ class RestClient:
         return response.json() # list of all known addresses with names
     
     #Experimental endpoint
-    def get_top_wallets(self, limit: int | None = None):
-        if limit and not 1 <= limit <= 9999:
-            raise ValueError("limit must be in the inclusive range [1, 9999]")
-        
+    def get_top_wallets(self):
         url = f"{self.base_url}/addresses/top"
         response = requests.get(url)
 
@@ -65,13 +61,7 @@ class RestClient:
                 f"Error fetching top wallets ({response.status_code}): {response.text}"
             )
 
-        data = response.json()
-        ranking = data[0]["ranking"]
-
-        if limit is None:
-            return ranking
-
-        return ranking[:limit]
+        return response.json() # list of top wallets
 
 
     def get_full_transactions_raw(self, address, limit: int = 500, offset: int = 0, resolve = None):
@@ -142,7 +132,131 @@ class RestClient:
         data = response.json()
         return data
 
+    # -------------------------------
+    # Public REST API method calls for Kaspa network information
+    # -------------------------------
+    def get_virtual_blue_score(self):
+        url = f"{self.base_url}/info/virtual-chain-blue-score"
+        response = requests.get(url)
 
+        if not response.ok:
+            raise KaspaAPIError(
+                f"Error fetching virtual blue score ({response.status_code}): {response.text}"
+            )
+        
+        return response.json()
+    
+    def get_blockdag_info(self):
+        url = f"{self.base_url}/info/blockdag"
+        response = requests.get(url)
+
+        if not response.ok:
+            raise KaspaAPIError(
+                f"Error fetching blockdag info ({response.status_code}): {response.text}"
+            )
+        
+        return response.json()
+    
+    def get_info_coinsupply(self):
+        url = f"{self.base_url}/info/coinsupply"
+        response = requests.get(url)
+
+        if not response.ok:
+            raise KaspaAPIError(
+                f"Error fetching coin supply ({response.status_code}): {response.text}"
+            )
+        
+        return response.json()
+    
+    def get_info_kaspad(self):
+        url = f"{self.base_url}/info/kaspad"
+        response = requests.get(url)
+
+        if not response.ok:
+            raise KaspaAPIError(
+                f"Error fetching kaspad info ({response.status_code}): {response.text}"
+            )
+        
+        return response.json()
+
+    def get_info_fee_estimate(self):
+        url = f"{self.base_url}/info/fee-estimate"
+        response = requests.get(url)
+
+        if not response.ok:
+            raise KaspaAPIError(
+                f"Error fetching fee estimates ({response.status_code}): {response.text}"
+            )
+        
+        return response.json()
+    
+    def get_info_price(self):
+        url = f"{self.base_url}/info/price"
+        response = requests.get(url)
+
+        if not response.ok:
+            raise KaspaAPIError(
+                f"Error fetching price info ({response.status_code}): {response.text}"
+            )
+        
+        return response.json()
+
+    def get_info_blockreward(self):
+        url = f"{self.base_url}/info/blockreward"
+        response = requests.get(url)
+
+        if not response.ok:
+            raise KaspaAPIError(
+                f"Error fetching block reward info ({response.status_code}): {response.text}"
+            )
+        
+        return response.json()
+
+    def get_info_halving(self):
+        url = f"{self.base_url}/info/halving"
+        response = requests.get(url)
+
+        if not response.ok:
+            raise KaspaAPIError(
+                f"Error fetching halving info ({response.status_code}): {response.text}"
+            )
+        
+        return response.json()
+    
+    def get_info_hashrate(self):
+        url = f"{self.base_url}/info/hashrate"
+        response = requests.get(url)
+
+        if not response.ok:
+            raise KaspaAPIError(
+                f"Error fetching hashrate info ({response.status_code}): {response.text}"
+            )
+        
+        return response.json()
+    
+    def get_info_hashrate_max(self):
+        url = f"{self.base_url}/info/hashrate/max"
+        response = requests.get(url)
+
+        if not response.ok:
+            raise KaspaAPIError(
+                f"Error fetching max hashrate info ({response.status_code}): {response.text}"
+            )
+        
+        return response.json()
+    
+    #TODO implemetn hashtrate history endpoints
+
+    def get_info_marketcap(self):
+        url = f"{self.base_url}/info/marketcap"
+        response = requests.get(url)
+
+        if not response.ok:
+            raise KaspaAPIError(
+                f"Error fetching marketcap info ({response.status_code}): {response.text}"
+            )
+        
+        return response.json()
     
 
 

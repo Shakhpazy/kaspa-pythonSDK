@@ -35,19 +35,48 @@ class TestRestClient(unittest.TestCase):
     #     direct_api_result = response.json()
     #     self.assertEqual(result, direct_api_result)
     
-    # def test_get_top_wallets_no_params(self):
+    # def test_get_top_wallets(self):
     #     result = self.client.get_top_wallets()
     #     self.assertIsInstance(result, list)
-    #     self.assertEqual(len(result), 10000)
-    
-    # def test_get_top_wallets_with_limit(self):
-    #     limit = 50
-    #     result = self.client.get_top_wallets(limit=limit)
-    #     self.assertIsInstance(result, list)
-    #     self.assertEqual(len(result), limit)
+    #     self.assertEqual(len(result[0]["ranking"]), 10000)
 
-    def test_get_full_transactions_raw_bad_inputs(self):
-        pass
+    # def test_get_full_transactions_raw_basic(self):
+    #     address = "kaspa:qr2adzl6vl69thdss2parxcyctlmwa979xfswxafzl9lh9y8pnja6pcceswpr"
+    #     result = self.client.get_full_transactions_raw(address)
+    #     self.assertIsInstance(result, list)
+    #     # Manual verification required for dynamic data 
+    #     response = requests.get(f"{self.base_address}/addresses/{address}/full-transactions", 
+    #                           params={"limit": 500, "offset": 0})
+    #     direct_api_result = response.json()
+    #     self.assertEqual(result, direct_api_result)
+
+    # def test_get_full_transactions_raw_with_params(self):
+    #     address = "kaspa:qr2adzl6vl69thdss2parxcyctlmwa979xfswxafzl9lh9y8pnja6pcceswpr"
+    #     result = self.client.get_full_transactions_raw(address, limit=100, offset=10)
+    #     self.assertIsInstance(result, list)
+    #     # Manual verification required for dynamic data 
+    #     response = requests.get(f"{self.base_address}/addresses/{address}/full-transactions", 
+    #                           params={"limit": 100, "offset": 10})
+    #     direct_api_result = response.json()
+    #     self.assertEqual(result, direct_api_result)
+
+    # def test_get_full_transactions_raw_invalid_limit(self):
+    #     address = "kaspa:qr2adzl6vl69thdss2parxcyctlmwa979xfswxafzl9lh9y8pnja6pcceswpr"
+    #     with self.assertRaises(ValueError):
+    #         self.client.get_full_transactions_raw(address, limit=0)
+        
+    #     with self.assertRaises(ValueError):
+    #         self.client.get_full_transactions_raw(address, limit=501)
+
+    # def test_get_full_transactions_raw_invalid_offset(self):
+    #     address = "kaspa:qr2adzl6vl69thdss2parxcyctlmwa979xfswxafzl9lh9y8pnja6pcceswpr"
+    #     with self.assertRaises(ValueError):
+    #         self.client.get_full_transactions_raw(address, offset=-1)
+
+    # def test_get_full_transactions_raw_invalid_resolve(self):
+    #     address = "kaspa:qr2adzl6vl69thdss2parxcyctlmwa979xfswxafzl9lh9y8pnja6pcceswpr"
+    #     with self.assertRaises(ValueError):
+    #         self.client.get_full_transactions_raw(address, resolve="invalid")
         
 
 
